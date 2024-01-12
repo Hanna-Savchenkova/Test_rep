@@ -119,4 +119,5 @@ SELECT * FROM runners WHERE id not IN (SELECT winner_id FROM races)
 --because the races table has NULL in the winner_id field 
 -----------------------------------------------------------------
 2)
+3) commit 2
 
