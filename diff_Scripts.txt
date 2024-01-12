@@ -1,0 +1,122 @@
+--SQL server, Postgres
+with cte1 as
+(
+select 1 a, 2 b
+union all
+select 2, 3
+union all
+select 3, 8
+),
+cte2 as
+(
+select 3 a, 2 b
+union all
+select 4, 3
+union all
+select 5, 8
+)
+select * from cte1, cte2
+--------------------------------------------
+--SQL Server 
+with cte1 as
+(
+select 1 a, 2 b
+union all
+select 2, 3
+union all
+select 3, 8
+),
+cte2 as
+(
+select 1 a, 1 b
+union all
+select 1, 2
+union all
+select 1, 7
+union all
+select 2 a, 4 b
+union all
+select 2, 3
+union all
+select 2, 8
+)
+--select * from cte1 
+--outer apply 
+--(select top 1 a from cte2 where cte1.a = a order by b desc) t
+select * from cte1 
+cross apply 
+(select top 1 a from cte2 where cte1.a = a order by b desc) t
+/*
+--????
+select * from cte1 
+cross apply 
+(select max(b) max_b from cte2 where cte1.a = a) t
+*/
+---PostgreSQL
+with cte1 as
+(
+select 1 a, 2 b
+union all
+select 2, 3
+union all
+select 3, 8
+),
+cte2 as
+(
+select 1 a, 1 b
+union all
+select 1, 2
+union all
+select 1, 7
+union all
+select 2 a, 4 b
+union all
+select 2, 3
+union all
+select 2, 8
+)
+select * from cte1 
+join lateral 
+(select b from cte2 where cte1.a = a order by b desc limit 1) t on true;
+
+/*
+select * from cte1 
+left join lateral 
+(select b from cte2 where cte1.a = a order by b desc limit 1) t on true;
+*/
+/*
+ ---???
+ select * from cte1 
+join lateral 
+(select max(b) max_b from cte2 where cte1.a = a) t on true;
+ */
+--------------------------------------------------------------
+--SQL server, Postgres
+with runners as
+(
+select 1 id, 'John Doe' name
+union
+select 2, 'Jane Doe'
+union
+select 3, 'Alice Jones'
+union
+select 4, 'Bobby Louis'
+union
+select 5, 'Lisa Romero'
+), races as
+(
+select 1 id, '100 meter dash' event, 2 winner_id
+union
+select 2, '500 meter dash', 3
+union
+select 3, 'cross-country', 2
+union
+select 4, 'triathalon', null
+)
+SELECT * FROM runners WHERE id not IN (SELECT winner_id FROM races)
+
+--!!!! RESULT is empty set
+--because the races table has NULL in the winner_id field 
+-----------------------------------------------------------------
+2)
+
