@@ -120,4 +120,6 @@ SELECT * FROM runners WHERE id not IN (SELECT winner_id FROM races)
 -----------------------------------------------------------------
 2)
 3) commit 2
+new branch hannasav
+commit 1
 
